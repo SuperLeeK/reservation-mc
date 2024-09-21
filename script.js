@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 function createModal() {
   const modal = document.createElement('div');
   modal.id = 'downloadProgressModal';
