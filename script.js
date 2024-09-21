@@ -50,6 +50,16 @@ async function reservation() {
   // 타겟 날짜까지 남은 시간 계산 (밀리초)
   const timeToTarget = targetDate.getTime() - now.getTime();
   // 남은 시간 후에 실행
+  const progressLabel = document.createElement('div');
+  progressLabel.style.marginTop = '5px';
+  modalContent.appendChild(progressLabel);
+
+  const elapsedTime = targetDate - new Date();
+  const estimatedTotalTime = (elapsedTime / progress) * 100;
+  const remainingTime = estimatedTotalTime - elapsedTime;
+  const remainingMinutes = Math.floor(remainingTime / (1000 * 60));
+  const remainingSeconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+  progressLabel.textContent = `${remainingMinutes}분 ${remainingSeconds}초 후에 예약을 시도합니다.`
 
   return delay(timeToTarget)
     .then(async () => {
