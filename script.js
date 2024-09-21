@@ -50,6 +50,8 @@ async function reservation() {
     alert('타겟 날짜는 과거입니다. 미래 날짜를 입력하세요.');
     return
   }
+  const _targetIndex = prompt('예약할 타임을 입력해주세요. ex) 1 -> 1번째타임')
+  const targetIndex = parseInt(_targetIndex - 1);
   document.body.appendChild(modal);
 
   const timeToTarget = targetDate.getTime() - now.getTime();
@@ -59,7 +61,7 @@ async function reservation() {
 
   const interval = setInterval(() => {
     const remainingTime = targetDate - new Date();
-    progressLabel.textContent = `${formatDate(remainingTime)} 후에 예약을 시도합니다.`;
+    progressLabel.textContent = `${formatDate(remainingTime)} 후에 ${_targetIndex}번째 타임의 예약을 시도합니다.`;
   }, 50)
 
   return delay(timeToTarget)
@@ -81,7 +83,7 @@ async function reservation() {
       const data = await response.json();
 
       const hasTimes = data?.filter(e => e.course_type === '18');
-      const teeTimes = hasTimes[0]?.pk;
+      const teeTimes = hasTimes[targetIndex]?.pk;
 
       if (!teeTimes) {
         alert('No teeTimes');
@@ -89,6 +91,7 @@ async function reservation() {
       }
 
       document.querySelector('#id_teetime').value = teeTimes;
+      document.querySelector('#submit_btn').click();
     })
 }
 
