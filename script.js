@@ -54,9 +54,7 @@ async function reservation() {
   progressLabel.style.marginTop = '5px';
   modalContent.appendChild(progressLabel);
 
-  const elapsedTime = targetDate - new Date();
-  const estimatedTotalTime = (elapsedTime / progress) * 100;
-  const remainingTime = estimatedTotalTime - elapsedTime;
+  const remainingTime = targetDate - new Date();
   const remainingMinutes = Math.floor(remainingTime / (1000 * 60));
   const remainingSeconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
   progressLabel.textContent = `${remainingMinutes}분 ${remainingSeconds}초 후에 예약을 시도합니다.`
