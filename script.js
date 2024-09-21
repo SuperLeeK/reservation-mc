@@ -28,9 +28,11 @@ function createModal() {
 function importModules() {
   var script1 = document.createElement('script');
   script1.src = 'https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js';
+  var script2 = document.createElement('script');
+  script2.src = 'https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js';
   var script3 = document.createElement('script');
   script3.src = 'https://cdn.jsdelivr.net/npm/qs@6.11.0/dist/qs.min.js';
-  [script1, script3].map((script) => document.head.appendChild(script));
+  [script1, script2, script3].map((script) => document.head.appendChild(script));
 }
 
 async function reservation() {
@@ -54,10 +56,11 @@ async function reservation() {
   progressLabel.style.marginTop = '5px';
   modalContent.appendChild(progressLabel);
 
-  const remainingTime = targetDate - new Date();
-  const remainingMinutes = Math.floor(remainingTime / (1000 * 60));
-  const remainingSeconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
-  progressLabel.textContent = `${remainingMinutes}분 ${remainingSeconds}초 후에 예약을 시도합니다.`
+  const { day, hour, minute, second } = dayjs()
+  const dateUnit = ['초','분','시','일'];
+  progressLabel.textContent = [
+    day(), hour(), minute(), second()
+  ].filter(Boolean).reverse().map((v,i) => `${v}${dateUnit[i]}`).reverse().join(' ');
 
   return delay(timeToTarget)
     .then(async () => {
