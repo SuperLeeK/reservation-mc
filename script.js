@@ -52,7 +52,7 @@ async function reservation() {
   // 남은 시간 후에 실행
 
   await delay(timeToTarget)
-    .then(() => {
+    .then(async () => {
       const instance = axios.create({ withCredentials: true });
       await instance.post('https://najuhills.com/get_reservation_tee_time/',
         Qs.stringify({date: targetDate.format('YYYY-MM-DD')})
