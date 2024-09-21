@@ -45,14 +45,14 @@ async function reservation() {
   const _targetDate = prompt('예약할 날짜를 입력해주세요. ex) 2024-09-21');
   const now = new Date();
   const targetDate = new Date(_targetDate);
-    // 타겟 날짜가 과거인지 확인
+  targetDate.setDate(targetDate.getDate() - 21);
+
   if (targetDate <= now) {
     alert('타겟 날짜는 과거입니다. 미래 날짜를 입력하세요.');
     return;
   }
-  // 타겟 날짜까지 남은 시간 계산 (밀리초)
+
   const timeToTarget = targetDate.getTime() - now.getTime();
-  // 남은 시간 후에 실행
   const progressLabel = document.createElement('div');
   progressLabel.style.marginTop = '5px';
   modalContent.appendChild(progressLabel);
