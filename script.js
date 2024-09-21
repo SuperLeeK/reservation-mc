@@ -57,11 +57,15 @@ async function reservation() {
   progressLabel.style.marginTop = '5px';
   modalContent.appendChild(progressLabel);
 
-  const remainingTime = targetDate - new Date();
-  progressLabel.textContent = `${formatDate(remainingTime)} 후에 예약을 시도합니다.`;
+  const interval = setInterval(() => {
+    const remainingTime = targetDate - new Date();
+    progressLabel.textContent = `${formatDate(remainingTime)} 후에 예약을 시도합니다.`;
+  }, 50)
 
   return delay(timeToTarget)
     .then(async () => {
+      clearInterval(interval);
+      document.body.removeChild(modal);
       const formData = new URLSearchParams();
       formData.append('date', dayjs(targetDate).format('YYYY-MM-DD'));
 
@@ -85,7 +89,6 @@ async function reservation() {
       }
 
       document.querySelector('#id_teetime').value = teeTimes;
-      document.querySelector('#submit_btn').click();
     })
 }
 
