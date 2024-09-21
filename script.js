@@ -50,18 +50,21 @@ async function reservation() {
   // 타겟 날짜까지 남은 시간 계산 (밀리초)
   const timeToTarget = targetDate.getTime() - now.getTime();
   // 남은 시간 후에 실행
-  setTimeout(() => {
-    const instance = axios.create({ withCredentials: true });
-    await instance.post('https://najuhills.com/get_reservation_tee_time/',
-      Qs.stringify({date: targetDate.format('YYYY-MM-DD')})
-    )
-      .then((response) => {
-        const hasTimes = response.data?.filter(e => e.course_type === '18');
-        const teeTimes = hasTimes[0].pk;
-        if( !teeTimes ) return alert('No teeTimes');
-        $('#id_teetime')[0].value = teeTimes;
-        $('#submit_btn')[0].click();
+
+  await delay(timeToTarget)
+    .then(() => {
+      const instance = axios.create({ withCredentials: true });
+      await instance.post('https://najuhills.com/get_reservation_tee_time/',
+        Qs.stringify({date: targetDate.format('YYYY-MM-DD')})
+      )
+        .then((response) => {
+          const hasTimes = response.data?.filter(e => e.course_type === '18');
+          const teeTimes = hasTimes[0].pk;
+          if( !teeTimes ) return alert('No teeTimes');
+          $('#id_teetime')[0].value = teeTimes;
+          $('#submit_btn')[0].click();
+      })
     })
-  }, timeToTarget);
 }
 
+reservation();
