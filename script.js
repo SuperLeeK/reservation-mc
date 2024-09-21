@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 function createModal() {
   const modal = document.createElement('div');
   modal.id = 'downloadProgressModal';
@@ -34,6 +35,17 @@ function importModules() {
   script3.src = 'https://cdn.jsdelivr.net/npm/qs@6.11.0/dist/qs.min.js';
   [script1, script2, script3].map((script) => document.head.appendChild(script));
 }
+function formatDate(date) {
+  const dateUnit = ['초','분','시','일'];
+  const days = Math.floor(date / (1000 * 60 * 60 * 24)); // 남은 일수
+  const hours = Math.floor((date % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); // 남은 시수
+  const minutes = Math.floor((date % (1000 * 60 * 60)) / (1000 * 60)); // 남은 분수
+  const seconds = Math.floor((date % (1000 * 60)) / 1000); // 남은 초
+
+  return [
+    days, hours, minutes, seconds
+  ].filter(Boolean).reverse().map((v,i) => `${v}${dateUnit[i]}`).reverse().join(' ')
+}
 
 async function reservation() {
   importModules();
@@ -56,11 +68,8 @@ async function reservation() {
   progressLabel.style.marginTop = '5px';
   modalContent.appendChild(progressLabel);
 
-  const { day, hour, minute, second } = dayjs()
-  const dateUnit = ['초','분','시','일'];
-  progressLabel.textContent = [
-    day(), hour(), minute(), second()
-  ].filter(Boolean).reverse().map((v,i) => `${v}${dateUnit[i]}`).reverse().join(' ');
+  const remainingTime = targetDate - new Date();
+  progressLabel.textContent = `${formatDate(remainingTime)} 후에 예약을 시도합니다.`;
 
   return delay(timeToTarget)
     .then(async () => {
