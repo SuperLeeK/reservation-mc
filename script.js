@@ -51,9 +51,9 @@ async function reservation() {
   const timeToTarget = targetDate.getTime() - now.getTime();
   // 남은 시간 후에 실행
 
-  await delay(timeToTarget)
+  return delay(timeToTarget)
     .then(async () => {
-      const instance = axios.create({ withCredentials: true });
+      const instance = await axios.create({ withCredentials: true });
       await instance.post('https://najuhills.com/get_reservation_tee_time/',
         Qs.stringify({date: targetDate.format('YYYY-MM-DD')})
       )
