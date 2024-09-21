@@ -25,15 +25,6 @@ function createModal() {
   return {modal, modalContent};
 }
 
-function importModules() {
-  var script1 = document.createElement('script');
-  script1.src = 'https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js';
-  var script2 = document.createElement('script');
-  script2.src = 'https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js';
-  var script3 = document.createElement('script');
-  script3.src = 'https://cdn.jsdelivr.net/npm/qs@6.11.0/dist/qs.min.js';
-  [script1, script2, script3].map((script) => document.head.appendChild(script));
-}
 function formatDate(date) {
   const dateUnit = ['초','분','시','일'];
   const days = Math.floor(date / (1000 * 60 * 60 * 24)); // 남은 일수
@@ -47,7 +38,6 @@ function formatDate(date) {
 }
 
 async function reservation() {
-  importModules();
   const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
   const {modal, modalContent} = createModal();
   document.body.appendChild(modal);
@@ -72,17 +62,30 @@ async function reservation() {
 
   return delay(timeToTarget)
     .then(async () => {
-      const instance = await axios.create({ withCredentials: true });
-      await instance.post('https://najuhills.com/get_reservation_tee_time/',
-        Qs.stringify({date: targetDate.format('YYYY-MM-DD')})
-      )
-        .then((response) => {
-          const hasTimes = response.data?.filter(e => e.course_type === '18');
-          const teeTimes = hasTimes[0].pk;
-          if( !teeTimes ) return alert('No teeTimes');
-          $('#id_teetime')[0].value = teeTimes;
-          $('#submit_btn')[0].click();
-      })
+      const formData = new URLSearchParams();
+      formData.append('date', dayjs(targetDate).format('YYYY-MM-DD'));
+
+      const response = await fetch('https://najuhills.com/get_reservation_tee_time/', {
+        method: 'POST',
+        body: formData,
+        credentials: 'include', // withCredentials 옵션과 동일
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      });
+
+      const data = await response.json();
+
+      const hasTimes = data?.filter(e => e.course_type === '18');
+      const teeTimes = hasTimes[0]?.pk;
+
+      if (!teeTimes) {
+        alert('No teeTimes');
+        return;
+      }
+
+      document.querySelector('#id_teetime').value = teeTimes;
+      document.querySelector('#submit_btn').click();
     })
 }
 
