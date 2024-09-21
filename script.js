@@ -40,7 +40,6 @@ function formatDate(date) {
 async function reservation() {
   const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
   const {modal, modalContent} = createModal();
-  document.body.appendChild(modal);
 
   const _targetDate = prompt('예약할 날짜를 입력해주세요. ex) 2024-09-21');
   const now = new Date();
@@ -49,8 +48,9 @@ async function reservation() {
 
   if (targetDate <= now) {
     alert('타겟 날짜는 과거입니다. 미래 날짜를 입력하세요.');
-    return;
+    return
   }
+  document.body.appendChild(modal);
 
   const timeToTarget = targetDate.getTime() - now.getTime();
   const progressLabel = document.createElement('div');
