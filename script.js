@@ -69,7 +69,7 @@ async function reservation() {
       clearInterval(interval);
       document.body.removeChild(modal);
       const formData = new URLSearchParams();
-      formData.append('date', dayjs(targetDate).format('YYYY-MM-DD'));
+      formData.append('date', _targetDate);
 
       const response = await fetch('https://najuhills.com/get_reservation_tee_time/', {
         method: 'POST',
